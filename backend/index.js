@@ -3,6 +3,7 @@ import cors from "cors"
 import cookieParser from "cookie-parser"
 import dotenv from "dotenv"
 import connectDB from "./config/db.js"
+import userRoutes  from "./routes/user.route.js"
 
 dotenv.config()
 const PORT = process.env.PORT || 4000
@@ -27,6 +28,9 @@ app.use(cors(corsOptions))
 app.get("/", (req, res) => {
     res.send("Server ok")
 })
+
+// Api routes
+app.use("/api/v1/user",userRoutes)
 
 // Start server
 app.listen(PORT, () => {
