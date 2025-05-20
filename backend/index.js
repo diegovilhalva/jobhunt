@@ -5,6 +5,7 @@ import dotenv from "dotenv"
 import connectDB from "./config/db.js"
 import userRoutes  from "./routes/user.route.js"
 import companyRoutes from "./routes/company.route.js"
+import jobRoutes from "./routes/job.route.js"
 dotenv.config()
 const PORT = process.env.PORT || 4000
 
@@ -32,6 +33,7 @@ app.get("/", (req, res) => {
 // Api routes
 app.use("/api/v1/user",userRoutes)
 app.use("/api/v1/company",companyRoutes)
+app.use("/api/v1/jobs", jobRoutes)
 
 // Start server
 app.listen(PORT, () => {
