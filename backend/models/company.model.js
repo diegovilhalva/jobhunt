@@ -5,15 +5,14 @@ const companySchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
-      trim: true
+      trim: true,
+      unique:true
     },
     description: {
       type: String,
-      required: true
     },
     website: {
       type: String,
-      required: true,
       match: [
         /^(https?:\/\/)?([\w\-])+\.{1}[a-zA-Z]{2,}(\/.*)?$/,
         "Please enter a valid website URL"
@@ -24,7 +23,6 @@ const companySchema = new mongoose.Schema(
     },
     logo: {
       type: String,
-      required: true,
       match: [
         /^https?:\/\/.*\.(jpeg|jpg|png|svg|webp)$/,
         "Please provide a valid image URL"
