@@ -1,3 +1,4 @@
+import Navbar from "./components/shared/Navbar"
 
 
 
@@ -6,10 +7,7 @@ function App() {
 
   return (
     <>
-     <div className="">
-
-     <h1>Tdd</h1>
-     </div>
+    <Navbar />
     </>
   )
 }
