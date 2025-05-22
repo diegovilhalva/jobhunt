@@ -15,26 +15,26 @@ const Navbar = () => {
     return (
         <div className="bg-white">
             <div className="flex items-center justify-between mx-auto max-w-7xl h-16 px-4 sm:px-6 lg:px-8">
-                <a href="/">
+                <Link to="/">
                     <h1 className="text-2xl font-bold">
                         Job <span className="text-[#f83002]">Hunt</span>
                     </h1>
-                </a>
+                </Link>
 
                 <div className="flex items-center gap-12">
                     <ul className="flex font-medium items-center gap-5">
-                        <li><a href="/" className="hover:underline">Home</a></li>
+                        <li><Link to="/" className="hover:underline">Home</Link></li>
                         <li><a href="/jobs" className="hover:underline">Jobs</a></li>
                         <li><a href="/browse" className="hover:underline">Browse</a></li>
                     </ul>
 
                    
-                    {/* <div className="flex items-center gap-2">
-                        <Button variant="outline">Login</Button>
-                        <Button className="bg-[#6A38C2] hover:bg-[#5b30a6]">Signup</Button>
-                    </div> */}
+                     <div className="flex items-center gap-2">
+                        <Link to={"/login"}><Button variant="outline">Login</Button></Link>
+                        <Link to={"/signup"}><Button className="bg-[#6A38C2] hover:bg-[#5b30a6]">Signup</Button></Link>
+                    </div> 
 
-                    <Popover>
+                    {/*<Popover>
                         <PopoverTrigger asChild>
                             <Avatar className="cursor-pointer">
                                 <AvatarImage src={user.avatar} alt={`${user.name} avatar`} />
@@ -68,7 +68,7 @@ const Navbar = () => {
                                 </div>
                             </div>
                         </PopoverContent>
-                    </Popover>
+                    </Popover>*/}
                 </div>
             </div>
         </div>
