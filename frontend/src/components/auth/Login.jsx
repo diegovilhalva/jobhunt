@@ -1,32 +1,54 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import Navbar from "../shared/Navbar";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setLoading } from "../../redux/authSlice";
+import axios from "axios";
+import { USER_API_ENDPOINT } from "../../constants";
+import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 
 const Login = () => {
   const [input, setInput] = useState({
     email: "",
     password: ""
   });
-
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const { loading } = useSelector(store => store.auth)
   const changeEventHandler = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value });
   };
 
   const submitHandler = async (e) => {
     e.preventDefault();
+    try {
+      dispatch(setLoading(true))
+      const loginPayload = {
+        email: input.email,
+        password: input.password
+      };
+      const res = await axios.post(`${USER_API_ENDPOINT}/login`, loginPayload, {
+        headers: {
+          "Content-Type": "application/json"
+        },
+        withCredentials: true
+      })
 
-    
-    const loginPayload = {
-      email: input.email,
-      password: input.password
-    };
+      if (res.data.success) {
+        navigate("/")
+        toast.success(res.data.message)
+      }
 
-   
-    console.log("Login payload:", loginPayload);
-    
+    } catch (error) {
+      toast.error(error.response.data.message)
+    } finally {
+      dispatch(setLoading(false))
+    }
+
   };
 
   return (
@@ -63,12 +85,20 @@ const Login = () => {
             />
           </div>
 
-          <Button
-            type="submit"
-            className="w-full bg-[#6A38C2] hover:bg-[#5b30a6]"
-          >
-            Login
-          </Button>
+
+          {
+            loading ? (
+              <Button className="w-full my-4 bg-[#6A38C2] hover:bg-[#5b30a6]"> <Loader2 className='mr-2 h-4 w-4  animate-spin ' /> Please wait </Button>
+            ) : (
+              <Button
+                type="submit"
+                className="w-full bg-[#6A38C2] hover:bg-[#5b30a6]"
+              >
+                Login
+              </Button>
+            )
+          }
+
 
           <p className="text-sm text-center mt-4">
             Don't have an account?{" "}

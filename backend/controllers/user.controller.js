@@ -77,12 +77,7 @@ export const login = async (req, res) => {
             });
         }
 
-        if (role !== user.role) {
-            return res.status(403).json({
-                message: "Access denied for this user role.",
-                success: false,
-            });
-        }
+       
 
         const tokenData = {
             userId: user._id,

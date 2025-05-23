@@ -1,10 +1,15 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import Navbar from "../shared/Navbar";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setLoading } from "../../redux/authSlice";
+import axios from "axios";
+import { USER_API_ENDPOINT } from "../../constants";
+import { toast } from "sonner";
 
 const SignUp = () => {
     const userRoles = ["recruiter", "job-seeker", "student"];
@@ -17,6 +22,9 @@ const SignUp = () => {
         file: ""
     })
 
+    const { loading, user } = useSelector(store => store.auth);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
     const changeEventHandler = (e) => {
         setInput({ ...input, [e.target.name]: e.target.value })
     }
@@ -36,9 +44,26 @@ const SignUp = () => {
         if (input.file) {
             formData.append("file", input.file);
         }
+        try {
+            dispatch(setLoading)
+            const res = await axios.post(`${USER_API_ENDPOINT}/register`,formData,{
+                headers:{
+                    "Content-Type":"multipart/form-data",   
+                },
+                withCredentials: true,
 
-        // To do  add submit to backend using axios and redux
-        console.log(formData)
+            })
+            if (res.data.success) {
+                navigate("/login");
+                toast.success(res.data.message)
+            }
+        } catch (error) {
+             toast.error(error.response.data.message)
+        }finally{
+            dispatch(setLoading(false))
+        }
+
+
     }
     return (
         <div>
@@ -77,7 +102,7 @@ const SignUp = () => {
                             >
                                 {userRoles.map((role) => (
                                     <div key={role} className="flex items-center space-x-2">
-                                        <RadioGroupItem value={role}  id={role} />
+                                        <RadioGroupItem value={role} id={role} />
                                         <Label htmlFor={role} className="capitalize">{role}</Label>
                                     </div>
                                 ))}
@@ -90,13 +115,17 @@ const SignUp = () => {
                             <Input id="profile" name="profile" onChange={changeFileHandler} type="file" accept="image/*" />
                         </div>
                     </div>
-
-                    <Button
+                    { loading  ? (
+                     <Button className="w-full  bg-[#6A38C2] hover:bg-[#5b30a6] my-4"> <Loader2 className='mr-2 h-4 w-4 animate-spin' /> Please wait </Button>    
+                    ):(
+                         <Button
                         type="submit"
                         className="w-full bg-[#6A38C2] hover:bg-[#5b30a6]"
                     >
                         Signup
                     </Button>
+                    )}
+                   
 
                     <p className="text-sm text-center mt-4">
                         Already have an account?{" "}
