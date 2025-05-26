@@ -5,7 +5,7 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setLoading } from "../../redux/authSlice";
+import { setLoading, setUser } from "../../redux/authSlice";
 import axios from "axios";
 import { USER_API_ENDPOINT } from "../../constants";
 import { toast } from "sonner";
@@ -39,6 +39,7 @@ const Login = () => {
       })
 
       if (res.data.success) {
+        dispatch(setUser(res.data.user))
         navigate("/")
         toast.success(res.data.message)
       }

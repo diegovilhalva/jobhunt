@@ -1,18 +1,17 @@
 import { useState } from "react"
-import { Link } from "react-router"
+import { Link, useNavigate } from "react-router"
 import { Button } from "../ui/button"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
 import { Avatar, AvatarImage } from "../ui/avatar"
 import { LogOut, User2, Menu, X } from "lucide-react"
+import { useSelector } from "react-redux"
 
 const Navbar = () => {
+    const navigate = useNavigate()
     const [isMenuOpen, setIsMenuOpen] = useState(false)
-    const user = null
-    const dummyUser = {
-        name: "John Doe",
-        bio: "My bio",
-        avatar: "https://ui-avatars.com/api/?name=John+Doe&background=random"
-    }
+  
+    const {user} = useSelector(store => store.auth)
+    
 
     return (
         <div className="bg-white shadow-sm">
@@ -45,28 +44,31 @@ const Navbar = () => {
                             <Popover>
                                 <PopoverTrigger asChild>
                                     <Avatar className="cursor-pointer">
-                                        <AvatarImage src={dummyUser.avatar} alt={`${dummyUser.name} avatar`} />
+                                        <AvatarImage src={user.profile.profilePhoto ||`https://ui-avatars.com/api/?name=${user.fullName}&background=random` } alt={`${user.fullName} avatar`} />
                                     </Avatar>
                                 </PopoverTrigger>
                                 <PopoverContent className="w-80">
                                     <div>
                                         <div className="flex gap-2">
                                             <Avatar>
-                                                <AvatarImage src={dummyUser.avatar} alt={`${dummyUser.name} avatar`} />
+                                                <AvatarImage src={user.profile.profilePhoto ||`https://ui-avatars.com/api/?name=${user.fullName}&background=random`} alt={`${user.fullName} avatar`} />
                                             </Avatar>
                                             <div>
-                                                <h4 className="font-medium">{dummyUser.name}</h4>
-                                                <p className="text-sm text-muted-foreground">{dummyUser.bio}</p>
+                                                <h4 className="font-medium">{user.fullName}</h4>
+                                                {user.profile.bio ? ( <p className="text-sm text-muted-foreground">{user.profile.bio}</p>):(
+                                                      <p className="text-sm text-muted-foreground">No bio.</p>
+                                                )}
+                                              
                                             </div>
                                         </div>
 
                                         <div className="flex flex-col mt-4 text-gray-600">
-                                            <div className="flex w-fit items-center gap-2 cursor-pointer">
+                                            <Link to={"/profile"} className="flex w-fit items-center gap-2 cursor-pointer">
                                                 <User2 />
-                                                <Button variant="link" className="p-0 h-auto outline-none">
-                                                    View Profile
+                                                <Button variant="link" className="p-0 h-auto outline-none" >
+                                                    View Profile 
                                                 </Button>
-                                            </div>
+                                            </Link>
                                             <div className="flex w-fit items-center gap-2 cursor-pointer">
                                                 <LogOut />
                                                 <Button variant="link" className="p-0 h-auto">
@@ -134,22 +136,22 @@ const Navbar = () => {
                                     <div className="flex items-center gap-3 cursor-pointer p-2 hover:bg-gray-50 rounded-lg">
                                         <Avatar className="h-9 w-9">
                                             <AvatarImage 
-                                                src={dummyUser.avatar} 
-                                                alt={`${dummyUser.name} avatar`} 
+                                                src={user.profile.profilePhoto ||`https://ui-avatars.com/api/?name=${user.fullName}&background=random`} 
+                                                alt={`${user.fullName} avatar`} 
                                             />
                                         </Avatar>
                                         <div>
-                                            <p className="font-medium">{dummyUser.name}</p>
+                                            <p className="font-medium">{user.fullName}</p>
                                             <p className="text-sm text-muted-foreground">View profile</p>
                                         </div>
                                     </div>
                                 </PopoverTrigger>
                                 <PopoverContent className="w-full mx-2" side="bottom" align="start">
                                     <div className="flex flex-col gap-3">
-                                        <div className="flex items-center gap-2 cursor-pointer p-2 hover:bg-gray-100 rounded-md">
+                                        <Link to={"/profile"} className="flex items-center gap-2 cursor-pointer p-2 hover:bg-gray-100 rounded-md">
                                             <User2 className="h-4 w-4" />
                                             <span>My Profile</span>
-                                        </div>
+                                        </Link>
                                         <div className="flex items-center gap-2 cursor-pointer p-2 hover:bg-gray-100 rounded-md text-red-600">
                                             <LogOut className="h-4 w-4" />
                                             <span>Logout</span>
