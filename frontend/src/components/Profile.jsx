@@ -27,6 +27,7 @@ const Profile = () => {
                   user.profile.profilePhoto ||
                   `https://ui-avatars.com/api/?name=${user.fullName}&background=random`
                 }
+                className="object-cover"
                 alt="profile"
               />
             </Avatar>

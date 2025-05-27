@@ -14,7 +14,7 @@ import { Label } from "./ui/label";
 import axios from "axios";
 import { USER_API_ENDPOINT } from "../constants";
 import { toast } from "sonner";
-import { setUser } from "../redux/authSlice"; 
+import { setUser } from "../redux/authSlice";
 
 const UpdateProfileDialog = ({ open, setOpen }) => {
   const [loading, setLoading] = useState(false);
@@ -55,10 +55,10 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
     formData.append("phoneNumber", input.phoneNumber);
     formData.append("bio", input.bio);
     formData.append("skills", input.skills);
-
     if (input.resume) {
-      formData.append("file", input.resume);
+      formData.append("resume", input.resume); 
     }
+
 
     if (input.profilePhoto) {
       formData.append("profilePhoto", input.profilePhoto);
@@ -100,13 +100,13 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
   ];
 
   return (
-    <Dialog open={open}>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent
         className="sm:max-w-[425px]"
         onInteractOutside={() => setOpen(false)}
 
-            
-        >
+
+      >
         <DialogHeader>
           <DialogTitle>Update Profile</DialogTitle>
         </DialogHeader>

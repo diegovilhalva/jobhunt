@@ -44,14 +44,15 @@ const Navbar = () => {
                             <Popover>
                                 <PopoverTrigger asChild>
                                     <Avatar className="cursor-pointer">
-                                        <AvatarImage src={user.profile.profilePhoto ||`https://ui-avatars.com/api/?name=${user.fullName}&background=random` } alt={`${user.fullName} avatar`} />
+                                        <AvatarImage src={user.profile.profilePhoto ||`https://ui-avatars.com/api/?name=${user.fullName}&background=random` } alt={`${user.fullName} avatar`} className="object-cover" />
                                     </Avatar>
                                 </PopoverTrigger>
                                 <PopoverContent className="w-80">
                                     <div>
                                         <div className="flex gap-2">
                                             <Avatar>
-                                                <AvatarImage src={user.profile.profilePhoto ||`https://ui-avatars.com/api/?name=${user.fullName}&background=random`} alt={`${user.fullName} avatar`} />
+                                                <AvatarImage src={user.profile.profilePhoto ||`https://ui-avatars.com/api/?name=${user.fullName}&background=random`} alt={`${user.fullName} avatar`} 
+                                                className="object-cover" />
                                             </Avatar>
                                             <div>
                                                 <h4 className="font-medium">{user.fullName}</h4>
