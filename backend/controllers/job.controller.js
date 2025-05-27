@@ -78,7 +78,7 @@ export const getAllJobs = async (req, res) => {
         };
 
         const jobs = await Job.find(query)
-            .populate("company", "name location website")
+            .populate("company", "name location website logo")
             .sort({ createdAt: -1 });
 
         if (jobs.length === 0) {

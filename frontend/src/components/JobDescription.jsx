@@ -1,10 +1,38 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Badge } from './ui/badge'
 import { Button } from './ui/button'
 import Navbar from './shared/Navbar'
 import { Briefcase, MapPin, DollarSign, Users } from 'lucide-react'
+import { useParams } from 'react-router'
+import { useDispatch, useSelector } from 'react-redux'
+import { setSingleJob } from '../redux/jobSlice'
+import axios from 'axios'
+import { JOB_API_ENDPOINT } from '../constants'
 
 const JobDescription = () => {
+  const params = useParams()
+  const jobId = params.id
+  const { singleJob } = useSelector(store => store.job)
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    const fetchSingleJob = async () => {
+      try {
+        const res = await axios.get(`${JOB_API_ENDPOINT}/get/${jobId}`)
+        if (res.data.success) {
+          dispatch(setSingleJob(res.data.job))
+        }
+
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    fetchSingleJob()
+  }, [jobId, dispatch])
+  const formattedSalary = new Intl.NumberFormat('en-US', {
+    style: "currency",
+    currency: "USD"
+  }).format(singleJob?.salary)
   return (
     <div className="bg-white min-h-screen">
       <Navbar />
@@ -13,13 +41,13 @@ const JobDescription = () => {
         {/* Top Info */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
           <div>
-            <h2 className="text-3xl font-semibold text-gray-900">Full-Stack Developer</h2>
-            <p className="text-sm text-gray-500 mt-1">Posted on: <span className="text-gray-700">2025-05-20</span></p>
+            <h2 className="text-3xl font-semibold text-gray-900">{singleJob?.title}</h2>
+            <p className="text-sm text-gray-500 mt-1">Posted on: <span className="text-gray-700">{new Date(singleJob.createdAt).toLocaleDateString()}</span></p>
 
             <div className="flex flex-wrap gap-2 mt-4">
-              <Badge className="text-blue-700 font-semibold" variant="ghost">3 Positions</Badge>
-              <Badge className="text-[#F83002] font-semibold" variant="ghost">Full-Time</Badge>
-              <Badge className="text-[#7209b7] font-semibold" variant="ghost">$40k</Badge>
+              <Badge className="text-blue-700 font-semibold" variant="ghost">{singleJob?.numberOfOpenings} Positions</Badge>
+              <Badge className="text-[#F83002] font-semibold capitalize" variant="ghost">{singleJob?.jobType}</Badge>
+              <Badge className="text-[#7209b7] font-semibold" variant="ghost">${singleJob?.salary.toString().slice(0, 1)}K</Badge>
             </div>
           </div>
 
@@ -31,18 +59,19 @@ const JobDescription = () => {
         {/* Description */}
         <div className="border-t pt-6 space-y-6 text-gray-800">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <InfoRow label="Role" value="Full-Stack Developer" icon={<Briefcase size={18} />} />
-            <InfoRow label="Location" value="New York" icon={<MapPin size={18} />} />
-            <InfoRow label="Company" value="OpenDev Solutions" />
-            <InfoRow label="Experience" value="2 yrs" />
-            <InfoRow label="Salary" value="$40,000" icon={<DollarSign size={18} />} />
-            <InfoRow label="Total Applicants" value="100" icon={<Users size={18} />} />
+            <InfoRow label="Role" value={singleJob?.title} icon={<Briefcase size={18} />} />
+            <InfoRow label="Location" value={singleJob?.company.location} icon={<MapPin size={18} />} />
+            <InfoRow label="Company" value={singleJob?.company.name} />
+            <InfoRow label="Experience" value={singleJob?.
+              experienceLevel} />
+            <InfoRow label="Salary" value={formattedSalary} icon={<DollarSign size={18} />} />
+            <InfoRow label="Total Applicants" value={singleJob?.applications.length} icon={<Users size={18} />} />
           </div>
 
           <div>
             <h3 className="text-lg font-semibold text-gray-900 mb-2">Job Description</h3>
             <p className="text-gray-700 leading-relaxed">
-              We're looking for a Full-Stack Developer to build modern, responsive web applications and develop new features for existing platforms. You’ll work closely with a passionate team in a collaborative and fast-paced environment.
+              {singleJob?.description}
             </p>
           </div>
         </div>

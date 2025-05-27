@@ -4,14 +4,32 @@ import { Button } from "../ui/button"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
 import { Avatar, AvatarImage } from "../ui/avatar"
 import { LogOut, User2, Menu, X } from "lucide-react"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
+import { toast } from "sonner"
+import axios from "axios"
+import { USER_API_ENDPOINT } from "../../constants"
+import { setUser } from "../../redux/authSlice"
 
 const Navbar = () => {
     const navigate = useNavigate()
     const [isMenuOpen, setIsMenuOpen] = useState(false)
-  
-    const {user} = useSelector(store => store.auth)
-    
+
+    const { user } = useSelector(store => store.auth)
+    const dispatch = useDispatch()
+
+    const logoutHandler = async () => {
+        try {
+            const res = await axios.post(`${USER_API_ENDPOINT}/logout`, {}, { withCredentials: true })
+            if (res.data.success) {
+                dispatch(setUser(null))
+                navigate("/")
+                toast.success(res.data.message)
+            }
+        } catch (error) {
+            console.error(error)
+            toast.error(error.response.data.message)
+        }
+    }
 
     return (
         <div className="bg-white shadow-sm">
@@ -44,22 +62,22 @@ const Navbar = () => {
                             <Popover>
                                 <PopoverTrigger asChild>
                                     <Avatar className="cursor-pointer">
-                                        <AvatarImage src={user.profile.profilePhoto ||`https://ui-avatars.com/api/?name=${user.fullName}&background=random` } alt={`${user.fullName} avatar`} className="object-cover" />
+                                        <AvatarImage src={user.profile.profilePhoto || `https://ui-avatars.com/api/?name=${user.fullName}&background=random`} alt={`${user.fullName} avatar`} className="object-cover" />
                                     </Avatar>
                                 </PopoverTrigger>
                                 <PopoverContent className="w-80">
                                     <div>
                                         <div className="flex gap-2">
                                             <Avatar>
-                                                <AvatarImage src={user.profile.profilePhoto ||`https://ui-avatars.com/api/?name=${user.fullName}&background=random`} alt={`${user.fullName} avatar`} 
-                                                className="object-cover" />
+                                                <AvatarImage src={user.profile.profilePhoto || `https://ui-avatars.com/api/?name=${user.fullName}&background=random`} alt={`${user.fullName} avatar`}
+                                                    className="object-cover" />
                                             </Avatar>
                                             <div>
                                                 <h4 className="font-medium">{user.fullName}</h4>
-                                                {user.profile.bio ? ( <p className="text-sm text-muted-foreground">{user.profile.bio}</p>):(
-                                                      <p className="text-sm text-muted-foreground">No bio.</p>
+                                                {user.profile.bio ? (<p className="text-sm text-muted-foreground">{user.profile.bio}</p>) : (
+                                                    <p className="text-sm text-muted-foreground">No bio.</p>
                                                 )}
-                                              
+
                                             </div>
                                         </div>
 
@@ -67,12 +85,12 @@ const Navbar = () => {
                                             <Link to={"/profile"} className="flex w-fit items-center gap-2 cursor-pointer">
                                                 <User2 />
                                                 <Button variant="link" className="p-0 h-auto outline-none" >
-                                                    View Profile 
+                                                    View Profile
                                                 </Button>
                                             </Link>
                                             <div className="flex w-fit items-center gap-2 cursor-pointer">
                                                 <LogOut />
-                                                <Button variant="link" className="p-0 h-auto">
+                                                <Button variant="link" className="p-0 h-auto" onClick={logoutHandler}>
                                                     Logout
                                                 </Button>
                                             </div>
@@ -131,36 +149,36 @@ const Navbar = () => {
                             Browse
                         </Link>
                     </div>
-                    {user ? ( <div className="border-t border-gray-200 pb-3 pt-4 px-4">
-                            <Popover>
-                                <PopoverTrigger asChild>
-                                    <div className="flex items-center gap-3 cursor-pointer p-2 hover:bg-gray-50 rounded-lg">
-                                        <Avatar className="h-9 w-9">
-                                            <AvatarImage 
-                                                src={user.profile.profilePhoto ||`https://ui-avatars.com/api/?name=${user.fullName}&background=random`} 
-                                                alt={`${user.fullName} avatar`} 
-                                            />
-                                        </Avatar>
-                                        <div>
-                                            <p className="font-medium">{user.fullName}</p>
-                                            <p className="text-sm text-muted-foreground">View profile</p>
-                                        </div>
+                    {user ? (<div className="border-t border-gray-200 pb-3 pt-4 px-4">
+                        <Popover>
+                            <PopoverTrigger asChild>
+                                <div className="flex items-center gap-3 cursor-pointer p-2 hover:bg-gray-50 rounded-lg">
+                                    <Avatar className="h-9 w-9">
+                                        <AvatarImage
+                                            src={user.profile.profilePhoto || `https://ui-avatars.com/api/?name=${user.fullName}&background=random`}
+                                            alt={`${user.fullName} avatar`} className="object-cover"
+                                        />
+                                    </Avatar>
+                                    <div>
+                                        <p className="font-medium">{user.fullName}</p>
+                                        <p className="text-sm text-muted-foreground">View profile</p>
                                     </div>
-                                </PopoverTrigger>
-                                <PopoverContent className="w-full mx-2" side="bottom" align="start">
-                                    <div className="flex flex-col gap-3">
-                                        <Link to={"/profile"} className="flex items-center gap-2 cursor-pointer p-2 hover:bg-gray-100 rounded-md">
-                                            <User2 className="h-4 w-4" />
-                                            <span>My Profile</span>
-                                        </Link>
-                                        <div className="flex items-center gap-2 cursor-pointer p-2 hover:bg-gray-100 rounded-md text-red-600">
-                                            <LogOut className="h-4 w-4" />
-                                            <span>Logout</span>
-                                        </div>
+                                </div>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-full mx-2" side="bottom" align="start">
+                                <div className="flex flex-col gap-3">
+                                    <Link to={"/profile"} className="flex items-center gap-2 cursor-pointer p-2 hover:bg-gray-100 rounded-md">
+                                        <User2 className="h-4 w-4" />
+                                        <span>My Profile</span>
+                                    </Link>
+                                    <div className="flex items-center gap-2 cursor-pointer p-2 hover:bg-gray-100 rounded-md text-red-600" onClick={logoutHandler}>
+                                        <LogOut className="h-4 w-4" />
+                                        <span>Logout</span>
                                     </div>
-                                </PopoverContent>
-                            </Popover>
-                        </div>) : (
+                                </div>
+                            </PopoverContent>
+                        </Popover>
+                    </div>) : (
                         <div className="border-t border-gray-200 pb-3 pt-4">
                             <div className="flex gap-2 px-4">
                                 <Link to="/login" className="w-full">
