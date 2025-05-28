@@ -28,6 +28,3 @@ router.delete("/delete/:id", isAuthenticated, deleteJob);
 
 export default router;
 
- {/*<Popover>
-                       
-                    </Popover>*/}

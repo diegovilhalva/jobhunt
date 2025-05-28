@@ -1,4 +1,5 @@
 import { Company } from "../models/company.model.js"
+import cloudinary from "../utils/cloudinary.js"
 
 
 export const registerCompany = async (req, res) => {
@@ -85,6 +86,8 @@ export const getCompanyById = async (req, res) => {
             });
         }
 
+
+
         return res.status(200).json({
             company,
             success: true,
@@ -99,12 +102,13 @@ export const getCompanyById = async (req, res) => {
 };
 
 
+
+
 export const updateCompany = async (req, res) => {
   try {
     const { id } = req.params; 
     const { name, description, website, location } = req.body;
 
-    
     const company = await Company.findById(id);
 
     if (!company) {
@@ -114,7 +118,6 @@ export const updateCompany = async (req, res) => {
       });
     }
 
-    
     if (company.userId.toString() !== req.id) {
       return res.status(403).json({
         message: "You are not authorized to update this company.",
@@ -122,7 +125,6 @@ export const updateCompany = async (req, res) => {
       });
     }
 
-    
     if (name) {
       const existingCompany = await Company.findOne({ name });
       if (existingCompany && existingCompany._id.toString() !== id) {
@@ -139,6 +141,16 @@ export const updateCompany = async (req, res) => {
     company.website = website ?? company.website;
     company.location = location ?? company.location;
 
+    
+    if (req.file) {
+      const result = await cloudinary.uploader.upload(req.file.path, {
+        folder: "jobportal/companies",
+        resource_type: "image",
+      });
+
+      company.logo = result.secure_url;
+    }
+
     await company.save();
 
     return res.status(200).json({
@@ -154,3 +166,4 @@ export const updateCompany = async (req, res) => {
     });
   }
 };
+

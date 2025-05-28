@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from "mongoose"
 
 const companySchema = new mongoose.Schema(
   {
@@ -6,7 +6,7 @@ const companySchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
-      unique:true
+      unique: true
     },
     description: {
       type: String,
@@ -14,7 +14,7 @@ const companySchema = new mongoose.Schema(
     website: {
       type: String,
       match: [
-        /^(https?:\/\/)?([\w\-])+\.{1}[a-zA-Z]{2,}(\/.*)?$/,
+        /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)$/,
         "Please enter a valid website URL"
       ]
     },
