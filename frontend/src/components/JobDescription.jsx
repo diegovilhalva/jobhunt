@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Badge } from './ui/badge'
 import { Button } from './ui/button'
 import Navbar from './shared/Navbar'
@@ -7,13 +7,35 @@ import { useParams } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
 import { setSingleJob } from '../redux/jobSlice'
 import axios from 'axios'
-import { JOB_API_ENDPOINT } from '../constants'
+import { APPLICATIONS_API_ENDPOINT, JOB_API_ENDPOINT } from '../constants'
+import { toast } from 'sonner'
 
 const JobDescription = () => {
   const params = useParams()
   const jobId = params.id
   const { singleJob } = useSelector(store => store.job)
+  const { user } = useSelector(store => store.auth)
+
+  const isIntiallyApplied = singleJob?.applications?.some(application => application.applicant === user?.id) || false;
+
+  const [isApplied, setIsApplied] = useState(isIntiallyApplied)
   const dispatch = useDispatch()
+   const applyJobHandler = async () => {
+        try {
+            const res = await axios.post(`${APPLICATIONS_API_ENDPOINT}/apply/${jobId}`,{}, {withCredentials:true});
+            
+            if(res.data.success){
+                setIsApplied(true); 
+                const updatedSingleJob = {...singleJob, applications:[...singleJob.applications,{applicant:user?.id}]}
+                dispatch(setSingleJob(updatedSingleJob)); 
+                toast.success(res.data.message);
+
+            }
+        } catch (error) {
+            console.log(error);
+            toast.error(error.response.data.message);
+        }
+    }
 
   useEffect(() => {
     const fetchSingleJob = async () => {
@@ -33,6 +55,8 @@ const JobDescription = () => {
     style: "currency",
     currency: "USD"
   }).format(singleJob?.salary)
+  
+  console.log(user.id)
   return (
     <div className="bg-white min-h-screen">
       <Navbar />
@@ -42,17 +66,17 @@ const JobDescription = () => {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
           <div>
             <h2 className="text-3xl font-semibold text-gray-900">{singleJob?.title}</h2>
-            <p className="text-sm text-gray-500 mt-1">Posted on: <span className="text-gray-700">{new Date(singleJob.createdAt).toLocaleDateString()}</span></p>
+            <p className="text-sm text-gray-500 mt-1">Posted on: <span className="text-gray-700">{new Date(singleJob?.createdAt).toLocaleDateString()}</span></p>
 
             <div className="flex flex-wrap gap-2 mt-4">
               <Badge className="text-blue-700 font-semibold" variant="ghost">{singleJob?.numberOfOpenings} Positions</Badge>
               <Badge className="text-[#F83002] font-semibold capitalize" variant="ghost">{singleJob?.jobType}</Badge>
-              <Badge className="text-[#7209b7] font-semibold" variant="ghost">${singleJob?.salary.toString().slice(0, 1)}K</Badge>
+              <Badge className="text-[#7209b7] font-semibold" variant="ghost">{formattedSalary}</Badge>
             </div>
           </div>
 
-          <Button className="mt-4 md:mt-0 hover:bg-[#7209b7] bg-[#5f32ad]">
-            Apply Now
+          <Button className={`mt-4 md:mt-0 ${isApplied  && user ? 'bg-gray-600 cursor-not-allowed' : 'hover:bg-[#7209b7] bg-[#5f32ad]'}`} onClick={applyJobHandler} disabled={isApplied}>
+            {isApplied ? 'Already Applied' : 'Apply Now'}
           </Button>
         </div>
 
