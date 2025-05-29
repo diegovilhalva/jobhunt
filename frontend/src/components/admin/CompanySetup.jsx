@@ -69,7 +69,7 @@ const CompanySetup = () => {
             description: singleCompany.description || "",
             website: singleCompany.website || "",
             location: singleCompany.location || "",
-            file: singleCompany.file || null
+           
         })
     },[singleCompany]);
     return (
@@ -77,12 +77,12 @@ const CompanySetup = () => {
             <Navbar />
             
                 <div className='max-w-xl mx-auto my-10'>
-                    <form onSubmit={submitHandler}>
-                        <div className='flex items-center gap-5 p-8'>
                             <Button onClick={() => navigate("/admin/companies")} variant="outline" className="flex items-center gap-2 text-gray-500 font-semibold">
                                 <ArrowLeft />
                                 <span>Back</span>
                             </Button>
+                    <form onSubmit={submitHandler}>
+                        <div className='flex items-center gap-5 p-8'>
                             <h1 className='font-bold text-xl'>Company Setup</h1>
                         </div>
                         <div className='grid grid-cols-1 md:grid-cols-2 gap-4  max-sm:px-5'>
@@ -127,6 +127,7 @@ const CompanySetup = () => {
                                 <Input
                                     type="file"
                                     accept="image/*"
+                                    name="file"
                                     onChange={changeFileHandler}
                                 />
                             </div>
