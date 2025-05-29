@@ -56,7 +56,7 @@ const JobDescription = () => {
     currency: "USD"
   }).format(singleJob?.salary)
   
-  console.log(user.id)
+
   return (
     <div className="bg-white min-h-screen">
       <Navbar />

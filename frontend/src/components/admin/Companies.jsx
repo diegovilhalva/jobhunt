@@ -38,8 +38,7 @@ const Companies = () => {
                     </Button>
                 </div>
 
-                {/* Placeholder para a tabela */}
-                <CompaniesTable />
+          -                <CompaniesTable />
             </section>
         </div>
     );

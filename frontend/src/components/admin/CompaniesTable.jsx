@@ -55,7 +55,7 @@ const CompaniesTable = () => {
                             </TableCell>
                             <TableCell>{company.name}</TableCell>
                             <TableCell>
-                                {new Date(company.createdAt).toLocaleDateString("pt-BR")}
+                                {new Date(company.createdAt).toLocaleDateString()}
                             </TableCell>
                             <TableCell className="text-right">
                                 <Popover>
