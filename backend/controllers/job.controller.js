@@ -196,7 +196,9 @@ export const updateJob = async (req, res) => {
         
         if (title) job.title = title;
         if (description) job.description = description;
-        if (requirements) job.requirements = requirements.split(",");
+        if (requirements) job.requirements = Array.isArray(requirements)
+                ? requirements
+                : requirements.split(",").map((item) => item.trim())
         if (salary) job.salary = Number(salary);
         if (location) job.location = location;
         if (jobType) job.jobType = jobType;
