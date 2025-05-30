@@ -22,7 +22,8 @@ const JobDescription = () => {
   const dispatch = useDispatch()
    const applyJobHandler = async () => {
         try {
-            const res = await axios.post(`${APPLICATIONS_API_ENDPOINT}/apply/${jobId}`,{}, {withCredentials:true});
+            const res = await axios.post
+            (`${APPLICATIONS_API_ENDPOINT}/apply/${jobId}`,{},{withCredentials:true});
             
             if(res.data.success){
                 setIsApplied(true); 

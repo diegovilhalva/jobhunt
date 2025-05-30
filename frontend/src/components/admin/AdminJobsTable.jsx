@@ -13,6 +13,18 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from "../ui/alert-dialog";
+
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
@@ -24,6 +36,7 @@ import { setAllAdminJobs } from "../../redux/jobSlice";
 const AdminJobsTable = () => {
   const { allAdminJobs, searchJobByText } = useSelector((store) => store.job);
   const [filterJobs, setFilterJobs] = useState(allAdminJobs);
+  const [jobToDelete, setJobToDelete] = useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -39,9 +52,6 @@ const AdminJobsTable = () => {
   }, [allAdminJobs, searchJobByText]);
 
   const deleteJob = async (jobId) => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this job?");
-    if (!confirmDelete) return;
-
     try {
       const res = await axios.delete(`${JOB_API_ENDPOINT}/delete/${jobId}`, {
         withCredentials: true,
@@ -92,18 +102,41 @@ const AdminJobsTable = () => {
                     </div>
                     <div
                       className="flex items-center w-fit gap-2 cursor-pointer mt-2"
-                      onClick={() => navigate(`/admin/companies/${job._id}`)}
+                      onClick={() => navigate(`/admin/jobs/${job._id}/applicants`)}
                     >
                       <Eye className="w-4" />
                       <span>Applicants</span>
                     </div>
-                    <div
-                      className="flex items-center w-fit gap-2 cursor-pointer mt-2 text-red-500"
-                      onClick={() => deleteJob(job._id)}
-                    >
-                      <Trash className="w-4" />
-                      <span>Delete</span>
-                    </div>
+
+                    
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <div
+                          className="flex items-center w-fit gap-2 cursor-pointer mt-2 text-red-500"
+                          onClick={() => setJobToDelete(job._id)}
+                        >
+                          <Trash className="w-4" />
+                          <span>Delete</span>
+                        </div>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            This action cannot be undone. This will permanently delete the job from your database.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={() => deleteJob(jobToDelete)}
+                            className="bg-red-600 hover:bg-red-700"
+                          >
+                            Yes, delete it
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
                   </PopoverContent>
                 </Popover>
               </TableCell>

@@ -1,6 +1,6 @@
 import { Job } from "../models/job.model.js";
 import { Application } from "../models/application.model.js";
-import mongoose from "mongoose";
+
 
 export const applyJob = async (req, res) => {
     try {
@@ -37,10 +37,7 @@ export const applyJob = async (req, res) => {
         });
 
 
-        if (!Array.isArray(job.applications)) {
-            job.applications = [];
-        }
-
+       
         job.applications.push(newApplication._id);
         await job.save();
 
@@ -102,7 +99,6 @@ export const getApplicants = async (req, res) => {
             options: { sort: { createdAt: -1 } },
             populate: {
                 path: "applicant",
-                  select: "fullName email  phoneNumber"
             }
         })
 
