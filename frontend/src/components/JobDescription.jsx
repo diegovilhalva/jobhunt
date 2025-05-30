@@ -16,10 +16,21 @@ const JobDescription = () => {
   const { singleJob } = useSelector(store => store.job)
   const { user } = useSelector(store => store.auth)
 
-  const isIntiallyApplied = singleJob?.applications?.some(application => application.applicant === user?.id) || false;
+  
 
-  const [isApplied, setIsApplied] = useState(isIntiallyApplied)
+  const [isApplied, setIsApplied] = useState(false)
   const dispatch = useDispatch()
+
+  useEffect(() => {
+    if (singleJob && user) {
+      const hasApplied = singleJob.applications.some(
+        application => application.applicant === user.id
+      );
+      setIsApplied(hasApplied);
+    } else {
+      setIsApplied(false);
+    }
+  }, [singleJob, user]); 
    const applyJobHandler = async () => {
         try {
             const res = await axios.post
@@ -27,10 +38,9 @@ const JobDescription = () => {
             
             if(res.data.success){
                 setIsApplied(true); 
-                const updatedSingleJob = {...singleJob, applications:[...singleJob.applications,{applicant:user?.id}]}
+                const updatedSingleJob = {...singleJob, applications:[...singleJob.applications,{applicant:user.id}]}
                 dispatch(setSingleJob(updatedSingleJob)); 
                 toast.success(res.data.message);
-
             }
         } catch (error) {
             console.log(error);
@@ -58,6 +68,7 @@ const JobDescription = () => {
   }).format(singleJob?.salary)
   
 
+
   return (
     <div className="bg-white min-h-screen">
       <Navbar />
@@ -76,6 +87,7 @@ const JobDescription = () => {
             </div>
           </div>
 
+          
           <Button className={`mt-4 md:mt-0 ${isApplied  && user ? 'bg-gray-600 cursor-not-allowed' : 'hover:bg-[#7209b7] bg-[#5f32ad]'}`} onClick={applyJobHandler} disabled={isApplied}>
             {isApplied ? 'Already Applied' : 'Apply Now'}
           </Button>

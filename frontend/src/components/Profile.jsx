@@ -8,9 +8,11 @@ import { Badge } from './ui/badge';
 import AppliedJobTable from './AppliedJobTable';
 import { useState } from 'react';
 import UpdateProfileDialog from './UpdateProfileDialog';
+import useGeAllAppliedJobs from '../hooks/useGeAllAppliedJobs';
 const isResume = true;
 
 const Profile = () => {
+  useGeAllAppliedJobs()
   const { user } = useSelector((store) => store.auth);
       const [open, setOpen] = useState(false)
   return (
