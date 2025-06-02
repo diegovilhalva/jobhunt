@@ -14,7 +14,7 @@ const usegetAllJobs = () => {
         const fetchAllJobs = async () => {
             try {
                 
-                console.log(`Searching for: "${searchedQuery}"`)
+          
                 
                 
                 const params = new URLSearchParams()

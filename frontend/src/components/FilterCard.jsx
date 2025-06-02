@@ -7,7 +7,7 @@ import { setSearchedQuery } from "../redux/jobSlice";
 const filterData = [
   {
     filterType: "Location",
-    array: ["London", "New York", "Tokyo", "Madrid", "Buenos Aires"],
+    array: ["London", "New York", "Tokyo", "Madrid", "Chicago"],
   },
   {
     filterType: "Technology",
@@ -20,7 +20,7 @@ const filterData = [
 ];
 
 const FilterCard = () => {
-  
+
    const [selectedValue, setSelectedValue] = useState('');
     const dispatch = useDispatch();
     const changeHandler = (value) => {

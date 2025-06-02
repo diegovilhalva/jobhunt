@@ -4,12 +4,14 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setLoading } from "../../redux/authSlice";
 import axios from "axios";
 import { USER_API_ENDPOINT } from "../../constants";
 import { toast } from "sonner";
+import { Card } from "../ui/card";
+import { LoaderCircle } from "lucide-react";
 
 const SignUp = () => {
     const userRoles = ["recruiter", "job-seeker", "student"];
@@ -65,6 +67,21 @@ const SignUp = () => {
 
 
     }
+     useEffect(() => {
+        if(user){
+          navigate("/")
+        }
+      },[])
+       if (user) {
+          return (
+            <div className="flex justify-center items-center h-screen">
+              <Card className="p-6 flex flex-col items-center space-y-4">
+                <LoaderCircle className="animate-spin h-8 w-8 text-[#6A38C2]" />
+                <p className="text-sm text-muted-foreground">Loading...</p>
+              </Card>
+            </div>
+          )
+        }
     return (
         <div>
             <Navbar />

@@ -4,17 +4,36 @@ import { Avatar, AvatarImage } from './ui/avatar';
 import { Button } from './ui/button';
 import { Contact, Mail, Pen } from 'lucide-react';
 import { Label } from './ui/label';
-import { Badge } from './ui/badge'; 
+import { Badge } from './ui/badge';
 import AppliedJobTable from './AppliedJobTable';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import UpdateProfileDialog from './UpdateProfileDialog';
 import useGeAllAppliedJobs from '../hooks/useGeAllAppliedJobs';
+import { useNavigate } from 'react-router';
 const isResume = true;
 
 const Profile = () => {
   useGeAllAppliedJobs()
   const { user } = useSelector((store) => store.auth);
-      const [open, setOpen] = useState(false)
+  const navigate = useNavigate()
+  const [open, setOpen] = useState(false)
+
+ useEffect(() => {
+    if (user.role === "recruiter") {
+      navigate("/admin/companies")
+    }
+ },[])
+
+  if (user.role  === "recruiter") {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Card className="p-6 flex flex-col items-center space-y-4">
+          <LoaderCircle className="animate-spin h-8 w-8 text-[#6A38C2]" />
+          <p className="text-sm text-muted-foreground">Loading...</p>
+        </Card>
+      </div>
+    )
+  }
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
@@ -38,7 +57,7 @@ const Profile = () => {
               <p className="text-gray-600 text-sm break-words max-w-xs">{user?.profile?.bio}</p>
             </div>
           </div>
-          <Button className="self-end sm:self-auto"  onClick={() => setOpen((prev) => !prev)} variant="outline">
+          <Button className="self-end sm:self-auto" onClick={() => setOpen((prev) => !prev)} variant="outline">
             <Pen className="w-4 h-4 mr-1" /> Edit
           </Button>
         </div>
@@ -90,10 +109,10 @@ const Profile = () => {
       {/* Applied Jobs */}
       <div className="max-w-4xl mx-auto bg-white border border-gray-200 rounded-2xl my-6 p-6 sm:p-8 shadow-sm">
         <h2 className="font-bold text-lg mb-4 text-gray-800">Applied Jobs</h2>
-         <AppliedJobTable /> 
+        <AppliedJobTable />
       </div>
 
-      <UpdateProfileDialog open={open} setOpen={setOpen} /> 
+      <UpdateProfileDialog open={open} setOpen={setOpen} />
     </div>
   );
 };

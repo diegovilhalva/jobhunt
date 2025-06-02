@@ -13,6 +13,7 @@ import AdminJobs from "./components/admin/AdminJobs"
 import PostJob from "./components/admin/PostJob"
 import UpdateJob from "./components/admin/UpdateJob"
 import Applicants from "./components/admin/Applicants"
+import ProtectedRoute from "./components/admin/ProtectedRoute"
 
 const router = createBrowserRouter([
   {
@@ -46,32 +47,32 @@ const router = createBrowserRouter([
   },
   {
     path: "/admin/companies",
-    element: <Companies />
+    element: <ProtectedRoute> <Companies /></ProtectedRoute>
 
   },
   {
     path: "/admin/companies/create",
-    element: <CompanyCreate />
+    element: <ProtectedRoute>  <CompanyCreate /></ProtectedRoute>
   },
   {
-    path:"/admin/companies/:id",
-    element:<CompanySetup />
+    path: "/admin/companies/:id",
+    element: <ProtectedRoute>   <CompanySetup /></ProtectedRoute>
   },
   {
-    path:"/admin/jobs/",
-    element:<AdminJobs />
+    path: "/admin/jobs/",
+    element:  <ProtectedRoute>  <AdminJobs /> </ProtectedRoute>
   },
   {
-    path:"/admin/jobs/create",
-    element:<PostJob />
+    path: "/admin/jobs/create",
+    element:  <ProtectedRoute>  <PostJob /> </ProtectedRoute>
   },
   {
-    path:"/admin/jobs/update/:id",
-    element:<UpdateJob />
-  },
+    path: "/admin/jobs/update/:id",
+    element:  <ProtectedRoute>  <UpdateJob /> </ProtectedRoute>
+   },
   {
-    path:"/admin/jobs/:id/applicants",
-    element:<Applicants/>
+    path: "/admin/jobs/:id/applicants",
+    element: <ProtectedRoute> <Applicants /> </ProtectedRoute>
   }
 
 
