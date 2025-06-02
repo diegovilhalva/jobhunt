@@ -70,12 +70,15 @@ export const getAllJobs = async (req, res) => {
     try {
         const keyword = req.query.keyword || "";
 
-        const query = {
-            $or: [
-                { title: { $regex: keyword, $options: "i" } },
-                { description: { $regex: keyword, $options: "i" } },
-            ],
-        };
+        let query = {};
+        if (keyword) {
+            query = {
+                $or: [
+                    { title: { $regex: keyword, $options: "i" } },
+                    { description: { $regex: keyword, $options: "i" } },
+                ],
+            };
+        }
 
         const jobs = await Job.find(query)
             .populate("company", "name location website logo")

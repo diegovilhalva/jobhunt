@@ -1,3 +1,5 @@
+import { useDispatch } from "react-redux";
+import { setSearchedQuery } from "../redux/jobSlice";
 import { Button } from "./ui/button";
 import {
   Carousel,
@@ -6,6 +8,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "./ui/carousel";
+import { useNavigate } from "react-router";
 
 const categories = [
   "Frontend Developer",
@@ -18,6 +21,12 @@ const categories = [
 ];
 
 const CategoryCarousel = () => {
+  const navigate= useNavigate()
+  const dispatch = useDispatch()
+    const searchJobHandler = async (query) => {
+      dispatch(setSearchedQuery(query))
+      navigate("/browse")
+    }
   return (
     <section className="px-4 my-12 md:my-16 lg:my-20">
       <h2 className="text-xl sm:text-2xl font-semibold text-center mb-4 sm:mb-6">
@@ -39,6 +48,7 @@ const CategoryCarousel = () => {
                           py-5 sm:py-6
                           min-w-[120px] xs:min-w-[140px]"
                 variant="ghost"
+                onClick={() => searchJobHandler(cat)}
               >
                 {cat}
               </Button>
