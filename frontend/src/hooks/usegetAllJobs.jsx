@@ -29,9 +29,9 @@ const usegetAllJobs = () => {
                 console.error("Erro na requisição:", error)
             }
         }
+        fetchAllJobs()
         
-        
-    }, [searchedQuery, dispatch])
+    }, [])
 }
 
 export default usegetAllJobs
