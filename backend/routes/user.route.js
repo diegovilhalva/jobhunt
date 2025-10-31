@@ -10,7 +10,7 @@ const router = express.Router()
 router.post("/register", singleUpload, register)
 router.post("/login", login)
 router.patch("/profile/update", isAuthenticated,multiUpload, updateProfile)
-router.post("/logout", isAuthenticated, logout)
+router.post("/logout", logout)
 
 
 export default router
